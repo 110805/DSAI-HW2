@@ -7,7 +7,7 @@ TRAINING_SIZE = 80000
 DIGITS = 3
 REVERSE = False
 MAXLEN = DIGITS + 1 + DIGITS
-chars = '0123456789- '
+chars = '0123456789+ '
 RNN = layers.LSTM
 HIDDEN_SIZE = 128
 BATCH_SIZE = 128
@@ -46,26 +46,24 @@ print('Generating data...')
 while len(questions) < TRAINING_SIZE:
     f = lambda: int(''.join(np.random.choice(list('0123456789')) for i in range(np.random.randint(1, DIGITS + 1))))
     a, b = f(), f()
-    if a<b:
-        a,b=b,a
     key = tuple(sorted((a, b)))
     if key in seen:
         continue
     seen.add(key)
-    q = '{}-{}'.format(a, b)
+    q = '{}+{}'.format(a, b)
     query = q + ' ' * (MAXLEN - len(q))
-    ans = str(a - b)
+    ans = str(a + b)
     ans += ' ' * (DIGITS + 1 - len(ans))
     if REVERSE:
         query = query[::-1]
     questions.append(query)
     expected.append(ans)
-print('Total substraction questions:', len(questions))
+print('Total addition questions:', len(questions))
 print(questions[:5], expected[:5])
 
 print('Vectorization...')
 x = np.zeros((len(questions), MAXLEN, len(chars)), dtype=np.bool)
-y = np.zeros((len(expected), DIGITS +1, len(chars)), dtype=np.bool)
+y = np.zeros((len(expected), DIGITS + 1, len(chars)), dtype=np.bool)
 for i, sentence in enumerate(questions):
     x[i] = ctable.encode(sentence, MAXLEN)
 for i, sentence in enumerate(expected):
@@ -77,10 +75,11 @@ x = x[indices]
 y = y[indices]
 
 # train_test_split
-train_x = x[:20000]
-train_y = y[:20000]
-test_x = x[20000:]
-test_y = y[20000:]
+train_scope=20000
+train_x = x[:train_scope]
+train_y = y[:train_scope]
+test_x = x[train_scope:]
+test_y = y[train_scope:]
 
 split_at = len(train_x) - len(train_x) // 10
 (x_train, x_val) = train_x[:split_at], train_x[split_at:]

@@ -1,0 +1,29 @@
+add:
+	3 digits 100 iter 18000 train_data: 0.94551
+	3 digits 100 iter 22500 train_data: 0.98047
+	3 digits 120 iter 18000 train_data: 0.95693
+	4 digits 100 iter 18000 train_data: 0.24910
+	4 digits 150 iter 18000 train_data: 0.41576
+	4 digits 150 iter 22500 train_data: 0.52243
+	4 digits 150 iter 27000 train_data: 0.55118
+
+sub:
+	3 digits 100 iter 18000 train_data: 0.91056
+	3 digits 100 iter 22500 train_data: 0.81969
+	3 digits 100 iter 27000 train_data: 0.95706
+
+add_sub:
+	3 digits 100 iter 18000 train_data: 0.71315
+	3 digits 150 iter 18000 train_data: 0.79026
+	3 digits 200 iter 18000 train_data: 0.80260
+
+mul:
+	3 digits 100 iter 18000 train_data: 0.03871
+
+上面實驗結果最後的小數是正確率，正確率=(答對題數)/(# of test_data)
+根據以上結果來看:
+	1. 從3digits變成4digits的話會嚴重降低正確率
+	2. training_epoch(iter)次數上升的話則能使正確率上升
+	3. training_data的size則不一定，大部分是呈正相關，但在sub中卻怪怪的
+	4. 乘法運算則很明顯不適用，正確率遠低於加減法。原因我想大概是結果與原本的被乘數及乘數會相差太多，兩個三位數的加減法後最多結果也就四位數，但兩個三位數的相乘後最多會出現六位數的結果，也因此難以預測。
+
